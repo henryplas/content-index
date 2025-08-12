@@ -1,72 +1,107 @@
-# Content Index — Multimodal Segment Search
+# Content Index — Multimodal Segment Search (OpenCLIP + Whisper + Faiss)
 
-A tiny media search engine. It ingests videos → extracts 1 fps frames + audio (ffmpeg) → transcribes to text (Whisper) → embeds visuals + text (CLIP) → builds a Faiss vector index → serves semantic search with FastAPI. Bonus: segment-level retrieval (30s windows) + a Streamlit viewer.
-
----
-
-## 🚀 Live Demo (replace with your links)
-- API docs: https://\<PUBLIC_API_URL\>/docs
-- Segment viewer: https://\<PUBLIC_VIEWER_URL\>:8501
+A tiny media search engine. It ingests videos, extracts 1 fps frames and audio, transcribes speech to text, embeds visuals and text, builds a vector index, and serves semantic search.  
+Bonus: segment-level retrieval (30-second windows) and a Streamlit viewer with thumbnails, jump-to-time, and GIF export.
 
 ---
 
-## 🧭 How it works
-1. Preprocess: ffmpeg → 1 fps frames (artifacts/frames/<asset>/*.jpg) + mono 16 kHz audio.
-2. ASR: Whisper → artifacts/transcripts/<asset>.json.
-3. Embeddings: CLIP image (frames) + CLIP text (transcript); fuse with weight alpha; L2-normalize.
-4. Index: Faiss (inner product ≡ cosine on normalized vectors).
-   - Asset-level: faiss_hnsw.index, meta.jsonl (1 vector/video).
-   - Segment-level (30s): faiss_segments.index, meta_segments.jsonl.
-5. Serve: FastAPI /query (assets) and /query_segments (segments).
-6. View: Streamlit app to preview hits, jump to timestamps, export GIFs.
+## Screenshots (from docs/)
+
+**HTTP docs page**
+![HTTP docs](docs/api.png)
+
+**Segment viewer UI**
+![Segment viewer](docs/viewer.png)
 
 ---
 
-## ⏱ Quickstart
+## Sample results (tiny demo set)
 
-API:
+**Top segments (GIFs)**
+- Bunny / forest → ![bunny](docs/seg_bunny.gif)
+- Spaceship / robots → ![robots](docs/seg_robots.gif)
+- Snowy sword fight → ![snowy](docs/seg_snowy.gif)
+
+**Contact sheets (per asset)**
+![Big Buck Bunny](docs/contact_bbb_640x360.jpg)
+![Sintel](docs/contact_sintel_480p.jpg)
+![Tears of Steel](docs/contact_tears_720p.jpg)
+
+**Latency (optional)**
+![Latency histogram](docs/latency.png)
+
+---
+
+## Live demo (replace with your links)
+
+- HTTP docs page: https://\<PUBLIC_API_URL\>/docs  
+- Segment viewer: https://\<PUBLIC_VIEWER_URL\>:8501  
+On Lightning Studio, set ports 8000 (service) and 8501 (viewer) to Public.
+
+---
+
+## How it works
+
+1. Preprocess: ffmpeg writes frames to `artifacts/frames/<asset>/*.jpg` and mono 16 kHz audio.
+2. Speech-to-text: Whisper outputs `artifacts/transcripts/<asset>.json`.
+3. Embeddings: OpenCLIP image (frames) and OpenCLIP text (transcript), fused by weight alpha, then L2-normalized.
+4. Indexing: Faiss inner-product (cosine on normalized vectors).
+   - Asset level: one vector per video → `artifacts/faiss_hnsw.index`, `artifacts/meta.jsonl`.
+   - Segment level: 30 s windows → `artifacts/faiss_segments.index`, `artifacts/meta_segments.jsonl`.
+5. Serving: FastAPI endpoints for whole assets and segments.
+6. Viewing: Streamlit app to type a query, preview top segments, jump to timestamps, and export GIFs.
+
+---
+
+## Quickstart (copy/paste commands)
+
+Run the HTTP service:
+    
     export PYTHONPATH=.
     uvicorn src.serve.app:app --host 0.0.0.0 --port 8000
-    # open http://127.0.0.1:8000/docs
+    # then open http://127.0.0.1:8000/docs (or your Studio public URL)
 
-Queries (examples):
+Send search requests:
+    
     curl -s http://127.0.0.1:8000/healthz | python -m json.tool
     curl -sG --data-urlencode 'q=bunny in the forest' http://127.0.0.1:8000/query | python -m json.tool
     curl -sG --data-urlencode 'q=spaceship with robots' http://127.0.0.1:8000/query_segments | python -m json.tool
 
-Viewer:
+Run the viewer:
+    
     streamlit run apps/segments_viewer.py --server.address 0.0.0.0 --server.port 8501
 
 ---
 
-## 📷 Screens & Artifacts (files expected in this repo)
-- API screenshot → docs/api.png
-- Viewer screenshot → docs/viewer.png
-- Contact sheets → docs/contact_<asset>.jpg
-- Segment GIFs → docs/seg_bunny.gif, docs/seg_robots.gif, docs/seg_snowy.gif
-- Latency histogram (optional) → docs/latency.png
+## HTTP endpoints
+
+- GET `/healthz` → `{ ok, assets, asset_index_ntotal, segments, segment_index_ntotal }`
+- GET `/query?q=...&k=...` → top-K whole-asset matches with similarity
+- GET `/query_segments?q=...&k=...` → top-K segment matches with start/end timestamps
 
 ---
 
-## 🧾 API
-- GET /healthz  → { ok, assets, asset_index_ntotal, segments, segment_index_ntotal }
-- GET /query?q=...&k=...  → top-K assets with similarity
-- GET /query_segments?q=...&k=...  → top-K segments with start_sec/end_sec
+## Repo layout (key bits)
+
+- `src/util/` — ffmpeg, preprocessing, whisper
+- `src/embed/` — CLIP embedder
+- `src/index/` — builders for asset and segment indexes
+- `src/serve/app.py` — FastAPI service (healthz, whole-asset search, segment search)
+- `apps/` — Streamlit viewer
+- `artifacts/` — frames, audio, transcripts, meta files, Faiss indexes
+- `docs/` — screenshots, contact sheets, GIFs, latency chart
 
 ---
 
-## 🧱 Repo layout (key bits)
-    src/util/        ffmpeg, preprocessing, whisper
-    src/embed/       CLIP embedder
-    src/index/       asset + segment index builders
-    src/serve/app.py FastAPI
-    apps/            Streamlit viewer
-    artifacts/       frames/, audio/, transcripts/, meta*.jsonl, faiss*.index
+## Tuning
+
+- `alpha` (vision vs. text): higher favors visuals; lower favors transcript
+- `seg_seconds`: 15–60 s windows (smaller = sharper matches, larger index)
+- `frame_step`: 2–3 to subsample frames inside windows for speed
+- CLIP backbone: ViT-B/32 (faster) ↔ ViT-L/14 (higher quality)
 
 ---
 
-## 🔧 Tuning
-- alpha (vision vs text): higher = visuals, lower = transcript
-- seg_seconds (window size): 15–60s
-- frame_step (subsample): 2–3 for speed
-- CLIP backbone: ViT-B/32 (fast) ↔ ViT-L/14 (better)
+## Credits
+
+OpenCLIP · Whisper · FAISS · Blender Foundation (Big Buck Bunny, Sintel, Tears of Steel)
