@@ -1,0 +1,30 @@
+# core
+torch
+torchvision
+torchaudio
+open-clip-torch
+numpy
+pandas
+Pillow
+tqdm
+rich
+mlflow
+
+# media tools
+opencv-python
+librosa
+soundfile
+
+# ASR
+openai-whisper
+
+# serving & api
+fastapi
+uvicorn[standard]
+pydantic
+
+# vectors
+faiss-cpu
+
+# CLI helpers
+typer[all]
