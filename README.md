@@ -72,6 +72,3 @@ Viewer:
 - seg_seconds (window size): 15–60s
 - frame_step (subsample): 2–3 for speed
 - CLIP backbone: ViT-B/32 (fast) ↔ ViT-L/14 (better)
-
-## 🙏 Credits
-OpenAI Whisper · OpenCLIP · FAISS · Blender Foundation (Big Buck Bunny, Sintel, Tears of Steel)
