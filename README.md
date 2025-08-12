@@ -8,8 +8,6 @@ A tiny media search engine. It ingests videos → extracts 1 fps frames + audio 
 - API docs: https://\<PUBLIC_API_URL\>/docs
 - Segment viewer: https://\<PUBLIC_VIEWER_URL\>:8501
 
-On Lightning Studio, set ports 8000 (API) and 8501 (Streamlit) to Public.
-
 ---
 
 ## 🧭 How it works
