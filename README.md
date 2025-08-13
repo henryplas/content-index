@@ -22,11 +22,6 @@ Bonus: segment-level retrieval (30-second windows) and a Streamlit viewer with t
 - Spaceship / robots → ![robots](docs/seg_robots.gif)
 - Snowy sword fight → ![snowy](docs/seg_snowy.gif)
 
-**Contact sheets (per asset)**
-![Big Buck Bunny](docs/contact_bbb_640x360.jpg)
-![Sintel](docs/contact_sintel_480p.jpg)
-![Tears of Steel](docs/contact_tears_720p.jpg)
-
 
 ---
 
