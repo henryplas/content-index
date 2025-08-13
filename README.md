@@ -5,7 +5,7 @@ Bonus: segment-level retrieval (30-second windows) and a Streamlit viewer with t
 
 ---
 
-## Screenshots (from docs/)
+## Screenshots
 
 **HTTP docs page**
 ![HTTP docs](docs/api.PNG)
@@ -15,7 +15,7 @@ Bonus: segment-level retrieval (30-second windows) and a Streamlit viewer with t
 
 ---
 
-## Sample results (tiny demo set)
+## Sample results
 
 **Top segments (GIFs)**
 - Bunny / forest → ![bunny](docs/seg_bunny.gif)
@@ -46,7 +46,7 @@ On Lightning Studio, set ports 8000 (service) and 8501 (viewer) to Public.
 
 ---
 
-## Quickstart (copy/paste commands)
+## Quickstart
 
 Run the HTTP service:
     
@@ -74,7 +74,7 @@ Run the viewer:
 
 ---
 
-## Repo layout (key bits)
+## Repo layout
 
 - `src/util/` — ffmpeg, preprocessing, whisper
 - `src/embed/` — CLIP embedder
