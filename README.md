@@ -1,4 +1,4 @@
-# Content Index — Multimodal Segment Search (OpenCLIP + Whisper + Faiss)
+# Content Index - Multimodal Segment Search (OpenCLIP + Whisper + Faiss)
 
 A tiny media search engine. It ingests videos, extracts 1 fps frames and audio, transcribes speech to text, embeds visuals and text, builds a vector index, and serves semantic search.  
 Bonus: segment-level retrieval (30-second windows) and a Streamlit viewer with thumbnails, jump-to-time, and GIF export.
@@ -76,13 +76,13 @@ Run the viewer:
 
 ## Repo layout
 
-- `src/util/` — ffmpeg, preprocessing, whisper
-- `src/embed/` — CLIP embedder
-- `src/index/` — builders for asset and segment indexes
-- `src/serve/app.py` — FastAPI service (healthz, whole-asset search, segment search)
-- `apps/` — Streamlit viewer
-- `artifacts/` — frames, audio, transcripts, meta files, Faiss indexes
-- `docs/` — screenshots, contact sheets, GIFs, latency chart
+- `src/util/` - ffmpeg, preprocessing, whisper
+- `src/embed/` - CLIP embedder
+- `src/index/` - builders for asset and segment indexes
+- `src/serve/app.py` - FastAPI service (healthz, whole-asset search, segment search)
+- `apps/` - Streamlit viewer
+- `artifacts/` - frames, audio, transcripts, meta files, Faiss indexes
+- `docs/` - screenshots, contact sheets, GIFs, latency chart
 
 ---
 
