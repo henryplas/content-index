@@ -27,8 +27,6 @@ Bonus: segment-level retrieval (30-second windows) and a Streamlit viewer with t
 ![Sintel](docs/contact_sintel_480p.jpg)
 ![Tears of Steel](docs/contact_tears_720p.jpg)
 
-**Latency (optional)**
-![Latency histogram](docs/latency.png)
 
 ---
 
@@ -100,8 +98,4 @@ Run the viewer:
 - `frame_step`: 2–3 to subsample frames inside windows for speed
 - CLIP backbone: ViT-B/32 (faster) ↔ ViT-L/14 (higher quality)
 
----
 
-## Credits
-
-OpenCLIP · Whisper · FAISS · Blender Foundation (Big Buck Bunny, Sintel, Tears of Steel)
