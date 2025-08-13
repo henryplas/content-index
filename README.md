@@ -8,10 +8,10 @@ Bonus: segment-level retrieval (30-second windows) and a Streamlit viewer with t
 ## Screenshots (from docs/)
 
 **HTTP docs page**
-![HTTP docs](docs/api.png)
+![HTTP docs](docs/api.PNG)
 
 **Segment viewer UI**
-![Segment viewer](docs/viewer.png)
+![Segment viewer](docs/viewer.PNG)
 
 ---
 
